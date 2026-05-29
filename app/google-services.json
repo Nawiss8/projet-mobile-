@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "155475153745",
+    "firebase_url": "https://pulseo-app-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "pulseo-app",
+    "storage_bucket": "pulseo-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155475153745:android:321ba5beefa8ed37f6b970",
+        "android_client_info": {
+          "package_name": "com.pulseo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDobpMAFFhu8ABi5LQ28rSBwPhXmDa3w4Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
