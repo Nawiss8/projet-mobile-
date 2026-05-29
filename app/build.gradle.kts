@@ -5,15 +5,13 @@ plugins {
 }
 
 android {
-    // Garde bien ce namespace si tes ressources y sont liées,
-    // mais n'oublie pas de mettre le chemin complet (fr.projet.pulseo.MainActivity) dans le Manifest !
     namespace = "com.pulseo"
-    compileSdk = 34 // Modifié de 36 à 34 (Android 14 - Stable)
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.pulseo"
         minSdk = 24
-        targetSdk = 34 // Modifié de 36 à 34 (Android 14 - Stable)
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
     }
@@ -42,4 +40,19 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
+
+    // Exclure play-services-vision-common pour éviter les duplicates
+    implementation("com.google.android.gms:play-services-vision:20.0.0") {
+        exclude(group = "com.google.android.gms", module = "play-services-vision-common")
+    }
+}
+
+configurations {
+    all {
+        resolutionStrategy {
+            // Forcer la résolution des versions conflictuelles
+            force("com.google.android.gms:play-services-vision:20.0.0")
+            exclude(group = "com.google.android.gms", module = "play-services-vision-common")
+        }
+    }
 }

@@ -10,14 +10,12 @@ import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
 
-    // 1. Déclarer Firebase Auth
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // 2. Initialiser Firebase Auth
         auth = FirebaseAuth.getInstance()
 
         val etEmail = findViewById<EditText>(R.id.etEmail)
@@ -32,28 +30,29 @@ class RegisterActivity : AppCompatActivity() {
             val confirmPassword = etConfirmPassword.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                Toast.makeText(this, "Remplis tous les champs", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (password != confirmPassword) {
-                Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (password.length < 6) {
-                Toast.makeText(this, "Le mot de passe doit faire au moins 6 caractères", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // 3. Connexion réelle à Firebase pour créer l'utilisateur
+            // Créer l'utilisateur avec Firebase
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this, "Compte créé avec succès ! 🎉", Toast.LENGTH_SHORT).show()
-                        finish() // Retour à l'écran de Login
+                        Toast.makeText(this, "Account created successfully! 🎉", Toast.LENGTH_SHORT).show()
+                        finish()
                     } else {
-                        Toast.makeText(this, "Erreur : ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                        val errorMsg = task.exception?.message ?: "Unknown error"
+                        Toast.makeText(this, "Error: $errorMsg", Toast.LENGTH_LONG).show()
                     }
                 }
         }

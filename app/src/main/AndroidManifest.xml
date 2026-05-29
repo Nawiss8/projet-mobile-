@@ -23,6 +23,10 @@
             android:name=".RegisterActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

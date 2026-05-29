@@ -11,20 +11,18 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
-    // 1. Déclarer Firebase Auth
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 2. Initialiser Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Optionnel : Si l'utilisateur est déjà connecté, on peut l'envoyer direct au lecteur de musique
+        // Si l'utilisateur est déjà connecté
         if (auth.currentUser != null) {
-            // startActivity(Intent(this, HomeMusicActivity::class.java))
-            // finish()
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
         }
 
         try {
@@ -42,17 +40,17 @@ class MainActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                // 3. Connexion réelle avec Firebase
+                // Connexion Firebase
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(this, "Welcome to Pulseo !", Toast.LENGTH_SHORT).show()
-
-                            // TODO: Remplace "RegisterActivity" par la classe de ton lecteur de musique (ex: HomeActivity)
-                            // startActivity(Intent(this, HomeMusicActivity::class.java))
-                            // finish()
+                            startActivity(Intent(this, HomeActivity::class.java))
+                            finish()
                         } else {
-                            Toast.makeText(this, "Login Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                            // Affiche l'erreur réelle
+                            val errorMsg = task.exception?.message ?: "Unknown error"
+                            Toast.makeText(this, "Login Failed: $errorMsg", Toast.LENGTH_LONG).show()
                         }
                     }
             }
