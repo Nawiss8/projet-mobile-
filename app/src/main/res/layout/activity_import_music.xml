@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0D0D0D"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Import Music"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="32dp" />
+
+    <Button
+        android:id="@+id/btnChooseFile"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Choose MP3 / WAV File"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="#FF006E"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Info Selected File -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#1E1E1E"
+        android:padding="16dp"
+        android:layout_marginBottom="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selected File:"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No file selected"
+            android:textSize="12sp"
+            android:textColor="#AAAAAA"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Duration:"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="-- : --"
+            android:textSize="12sp"
+            android:textColor="#FF006E"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvDurationWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12sp"
+            android:textColor="#FF3333" />
+    </LinearLayout>
+
+    <!-- Song Name Input -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Song Name:"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/etSongName"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Enter song name"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#666666"
+        android:background="#1E1E1E"
+        android:padding="12dp"
+        android:layout_marginBottom="32dp"
+        android:inputType="text" />
+
+    <!-- Import Button -->
+    <Button
+        android:id="@+id/btnImport"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Import Song"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="#FF006E"
+        android:enabled="false" />
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="Back"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"
+        android:background="#333333"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

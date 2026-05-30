@@ -40,6 +40,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-database")
 
     // Exclure play-services-vision-common pour éviter les duplicates
     implementation("com.google.android.gms:play-services-vision:20.0.0") {
@@ -50,7 +51,6 @@ dependencies {
 configurations {
     all {
         resolutionStrategy {
-            // Forcer la résolution des versions conflictuelles
             force("com.google.android.gms:play-services-vision:20.0.0")
             exclude(group = "com.google.android.gms", module = "play-services-vision-common")
         }

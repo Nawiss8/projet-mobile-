@@ -3,35 +3,173 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="#0D0D0D">
+    android:background="#0D0D0D"
+    android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Header avec Logo -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pulseo"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="48dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="32dp">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pulseo"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textColor="#FFFFFF"
+            android:background="#FF006E"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+    </LinearLayout>
+
+    <!-- Bienvenue -->
     <TextView
         android:id="@+id/tvWelcome"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Welcome !"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="48dp" />
+        android:layout_marginBottom="32dp" />
 
+    <!-- Bouton Import Music -->
     <Button
-        android:id="@+id/btnLogout"
+        android:id="@+id/btnImportMusic"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="Logout"
+        android:text="+ Import Music"
         android:textSize="16sp"
+        android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:background="#FF006E" />
+        android:background="#FF006E"
+        android:layout_marginBottom="24dp" />
 
+    <!-- Liste des Musiques -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Music"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp" />
+
+    <ListView
+        android:id="@+id/lvMusicList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1E1E1E"
+        android:padding="8dp"
+        android:dividerHeight="8dp" />
+
+    <!-- Lecteur Musique (au bas) -->
+    <LinearLayout
+        android:id="@+id/musicPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="vertical"
+        android:background="#1E1E1E"
+        android:padding="12dp"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/tvCurrentSongName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No song selected"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvCurrentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textSize="12sp"
+                android:textColor="#AAAAAA" />
+
+            <ProgressBar
+                android:id="@+id/pbProgress"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="0dp"
+                android:layout_height="4dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:progress="0" />
+
+            <TextView
+                android:id="@+id/tvTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textSize="12sp"
+                android:textColor="#AAAAAA" />
+        </LinearLayout>
+
+        <!-- Controls -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnPrevious"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="⏮"
+                android:textColor="#FFFFFF"
+                android:background="#FF006E"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnPlayPause"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="▶"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:background="#FF006E"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnNext"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="⏭"
+                android:textColor="#FFFFFF"
+                android:background="#FF006E"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
