@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0D0D0D">
+    android:background="#0A0A0A">
 
     <!-- Header -->
     <LinearLayout
@@ -35,7 +35,7 @@
             android:paddingEnd="16dp" />
     </LinearLayout>
 
-    <!-- Welcome Message -->
+    <!-- Welcome -->
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="match_parent"
@@ -44,27 +44,47 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:padding="16dp" />
+        android:padding="16dp"
+        android:paddingBottom="8dp" />
 
-    <!-- Import Button -->
-    <Button
-        android:id="@+id/btnImportMusic"
+    <!-- Buttons Row -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:text="+ Add Music"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:background="#FF006E"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="20dp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:paddingTop="0dp">
 
-    <!-- "Your Music" Label -->
+        <Button
+            android:id="@+id/btnImportMusic"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:text="➕ Import"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="#FF006E"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnManageMusic"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:text="⚙️ Manage"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="#00D4FF"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Your Music Label -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your Music"
+        android:text="Now Playing"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
@@ -78,13 +98,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#0D0D0D"
+        android:background="#0A0A0A"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:dividerHeight="12dp"
-        android:listSelector="@android:color/transparent" />
+        android:listSelector="@android:color/transparent"
+        android:clipToPadding="false" />
 
-    <!-- Music Player Section -->
+    <!-- Player Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,7 +113,7 @@
         android:background="#1A1A1A"
         android:padding="16dp">
 
-        <!-- Current Song Name -->
+        <!-- Current Song -->
         <TextView
             android:id="@+id/tvCurrentSongName"
             android:layout_width="match_parent"
@@ -105,7 +126,7 @@
             android:maxLines="1"
             android:layout_marginBottom="12dp" />
 
-        <!-- Progress Bar with Time -->
+        <!-- Progress -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,13 +162,12 @@
                 android:layout_marginStart="8dp" />
         </LinearLayout>
 
-        <!-- Control Buttons -->
+        <!-- Controls -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="8dp">
+            android:gravity="center">
 
             <Button
                 android:id="@+id/btnPrevious"

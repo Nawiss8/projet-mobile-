@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.TextView
 
 class SongAdapter(
     context: Context,
-    private val songs: MutableList<Song>,
-    private val onDeleteClick: (Song) -> Unit
+    private val songs: MutableList<Song>
 ) : ArrayAdapter<Song>(context, 0, songs) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -25,16 +23,12 @@ class SongAdapter(
         if (song != null) {
             val tvSongName = view.findViewById<TextView>(R.id.tvSongName)
             val tvSongDuration = view.findViewById<TextView>(R.id.tvSongDuration)
-            val btnDelete = view.findViewById<Button>(R.id.btnDelete)
 
             tvSongName.text = song.name
+
             val minutes = song.duration / 60
             val seconds = song.duration % 60
             tvSongDuration.text = String.format("%d:%02d", minutes, seconds)
-
-            btnDelete.setOnClickListener {
-                onDeleteClick(song)
-            }
         }
 
         return view

@@ -1,6 +1,5 @@
 package com.pulseo
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -15,7 +14,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.io.File
 
 class HomeActivity : AppCompatActivity() {
 
@@ -23,6 +21,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var btnLogout: Button
     private lateinit var btnImportMusic: Button
+    private lateinit var btnManageMusic: Button
     private lateinit var tvWelcome: TextView
     private lateinit var lvMusicList: ListView
 
@@ -48,6 +47,7 @@ class HomeActivity : AppCompatActivity() {
         tvWelcome = findViewById(R.id.tvWelcome)
         btnLogout = findViewById(R.id.btnLogout)
         btnImportMusic = findViewById(R.id.btnImportMusic)
+        btnManageMusic = findViewById(R.id.btnManageMusic)
         lvMusicList = findViewById(R.id.lvMusicList)
 
         tvCurrentSongName = findViewById(R.id.tvCurrentSongName)
@@ -58,9 +58,7 @@ class HomeActivity : AppCompatActivity() {
         btnPlayPause = findViewById(R.id.btnPlayPause)
         btnNext = findViewById(R.id.btnNext)
 
-        songAdapter = SongAdapter(this, songsList) { song ->
-            showDeleteConfirmation(song)
-        }
+        songAdapter = SongAdapter(this, songsList)
         lvMusicList.adapter = songAdapter
 
         loadUserData()
@@ -74,6 +72,10 @@ class HomeActivity : AppCompatActivity() {
 
         btnImportMusic.setOnClickListener {
             startActivity(Intent(this, ImportMusicActivity::class.java))
+        }
+
+        btnManageMusic.setOnClickListener {
+            startActivity(Intent(this, ManageMusicActivity::class.java))
         }
 
         btnPlayPause.setOnClickListener {
@@ -127,48 +129,10 @@ class HomeActivity : AppCompatActivity() {
             musicPlayer.setSongs(songsList)
             musicPlayer.playAtIndex(position)
             updatePlayerUI()
+            Toast.makeText(this, "Playing: ${selectedSong.name}", Toast.LENGTH_SHORT).show()
         }
 
         loadSongs()
-    }
-
-    private fun showDeleteConfirmation(song: Song) {
-        AlertDialog.Builder(this)
-            .setTitle("Delete?")
-            .setMessage("Delete \"${song.name}\"?")
-            .setPositiveButton("Delete") { _, _ ->
-                deleteSong(song)
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-    private fun deleteSong(song: Song) {
-        try {
-            val file = File(song.filePath)
-            if (file.exists()) {
-                file.delete()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        database.reference
-            .child("songs")
-            .child(song.id)
-            .removeValue()
-            .addOnSuccessListener {
-                Toast.makeText(this, "Deleted!", Toast.LENGTH_SHORT).show()
-
-                if (musicPlayer.getCurrentSong()?.id == song.id) {
-                    musicPlayer.stop()
-                    tvCurrentSongName.text = "No song selected"
-                    btnPlayPause.text = "▶"
-                }
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
     }
 
     private fun loadUserData() {

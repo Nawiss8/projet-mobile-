@@ -33,6 +33,10 @@
             android:name=".ImportMusicActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ManageMusicActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

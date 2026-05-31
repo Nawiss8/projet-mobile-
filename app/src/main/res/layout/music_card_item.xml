@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:id="@+id/cardSong">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Song Name -->
+        <TextView
+            android:id="@+id/tvCardSongName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Song Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Duration -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⏱ Duration: "
+                android:textSize="13sp"
+                android:textColor="#CCCCCC" />
+
+            <TextView
+                android:id="@+id/tvCardDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textSize="13sp"
+                android:textColor="#CCCCCC"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Date Added -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📅 Added: "
+                android:textSize="13sp"
+                android:textColor="#CCCCCC" />
+
+            <TextView
+                android:id="@+id/tvCardDateAdded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jan 1, 2024"
+                android:textSize="13sp"
+                android:textColor="#CCCCCC"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Buttons Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCardEdit"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="✏️ Edit"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                android:background="#00D4FF"
+                android:textStyle="bold"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnCardDelete"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="❌ Delete"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                android:background="#FF3333"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
