@@ -3,108 +3,115 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0D0D0D"
-    android:padding="16dp">
+    android:background="#0D0D0D">
 
-    <!-- Header avec Logo -->
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="32dp">
+        android:background="#1A1A1A"
+        android:padding="16dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Pulseo"
-            android:textSize="32sp"
+            android:text="🎵 Pulseo"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="Logout"
             android:textColor="#FFFFFF"
+            android:textSize="12sp"
             android:background="#FF006E"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp" />
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
     </LinearLayout>
 
-    <!-- Bienvenue -->
+    <!-- Welcome Message -->
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Welcome !"
-        android:textSize="18sp"
+        android:textSize="22sp"
+        android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="32dp" />
+        android:padding="16dp" />
 
-    <!-- Bouton Import Music -->
+    <!-- Import Button -->
     <Button
         android:id="@+id/btnImportMusic"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="+ Import Music"
+        android:layout_height="52dp"
+        android:text="+ Add Music"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:background="#FF006E"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp" />
 
-    <!-- Liste des Musiques -->
+    <!-- "Your Music" Label -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Your Music"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp" />
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp" />
 
+    <!-- Music List -->
     <ListView
         android:id="@+id/lvMusicList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#1E1E1E"
-        android:padding="8dp"
-        android:dividerHeight="8dp" />
+        android:background="#0D0D0D"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:dividerHeight="12dp"
+        android:listSelector="@android:color/transparent" />
 
-    <!-- Lecteur Musique (au bas) -->
+    <!-- Music Player Section -->
     <LinearLayout
-        android:id="@+id/musicPlayer"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#1E1E1E"
-        android:padding="12dp"
-        android:layout_marginTop="16dp">
+        android:background="#1A1A1A"
+        android:padding="16dp">
 
+        <!-- Current Song Name -->
         <TextView
             android:id="@+id/tvCurrentSongName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="No song selected"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:ellipsize="end"
             android:maxLines="1"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="12dp" />
 
+        <!-- Progress Bar with Time -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:id="@+id/tvCurrentTime"
@@ -112,16 +119,17 @@
                 android:layout_height="wrap_content"
                 android:text="0:00"
                 android:textSize="12sp"
-                android:textColor="#AAAAAA" />
+                android:textColor="#AAAAAA"
+                android:layout_marginEnd="8dp" />
 
             <SeekBar
                 android:id="@+id/pbProgress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:progress="0" />
+                android:progress="0"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp" />
 
             <TextView
                 android:id="@+id/tvTotalTime"
@@ -129,21 +137,24 @@
                 android:layout_height="wrap_content"
                 android:text="0:00"
                 android:textSize="12sp"
-                android:textColor="#AAAAAA" />
+                android:textColor="#AAAAAA"
+                android:layout_marginStart="8dp" />
         </LinearLayout>
 
-        <!-- Controls -->
+        <!-- Control Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginBottom="8dp">
 
             <Button
                 android:id="@+id/btnPrevious"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:text="⏮"
+                android:textSize="18sp"
                 android:textColor="#FFFFFF"
                 android:background="#FF006E"
                 android:layout_marginStart="8dp"
@@ -151,10 +162,10 @@
 
             <Button
                 android:id="@+id/btnPlayPause"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:text="▶"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textColor="#FFFFFF"
                 android:background="#FF006E"
                 android:layout_marginStart="8dp"
@@ -162,9 +173,10 @@
 
             <Button
                 android:id="@+id/btnNext"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:text="⏭"
+                android:textSize="18sp"
                 android:textColor="#FFFFFF"
                 android:background="#FF006E"
                 android:layout_marginStart="8dp"

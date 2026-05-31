@@ -3,6 +3,7 @@ package com.pulseo
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 
 class MusicPlayer {
 
@@ -22,13 +23,18 @@ class MusicPlayer {
 
     fun play(song: Song) {
         stop()
+        Log.d("MusicPlayer", "Playing: ${song.name}")
+        Log.d("MusicPlayer", "File path: ${song.filePath}")
+
         mediaPlayer = MediaPlayer().apply {
             try {
                 setDataSource(song.filePath)
                 prepare()
                 start()
+                Log.d("MusicPlayer", "Song started successfully!")
                 startProgressUpdate()
             } catch (e: Exception) {
+                Log.e("MusicPlayer", "Error playing song: ${e.message}")
                 e.printStackTrace()
             }
         }
@@ -63,13 +69,17 @@ class MusicPlayer {
     }
 
     fun next() {
-        currentSongIndex = (currentSongIndex + 1) % songs.size
-        playAtIndex(currentSongIndex)
+        if (songs.isNotEmpty()) {
+            currentSongIndex = (currentSongIndex + 1) % songs.size
+            playAtIndex(currentSongIndex)
+        }
     }
 
     fun previous() {
-        currentSongIndex = if (currentSongIndex > 0) currentSongIndex - 1 else songs.size - 1
-        playAtIndex(currentSongIndex)
+        if (songs.isNotEmpty()) {
+            currentSongIndex = if (currentSongIndex > 0) currentSongIndex - 1 else songs.size - 1
+            playAtIndex(currentSongIndex)
+        }
     }
 
     fun seekTo(position: Long) {
@@ -91,7 +101,7 @@ class MusicPlayer {
                     val currentTime = mediaPlayer?.currentPosition?.toLong() ?: 0
                     val totalTime = mediaPlayer?.duration?.toLong() ?: 0
                     updateCallback?.invoke(currentTime, totalTime, true)
-                    handler.postDelayed(this, 500) // Update every 500ms
+                    handler.postDelayed(this, 500)
                 }
             }
         })

@@ -1,5 +1,6 @@
 package com.pulseo
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -8,11 +9,13 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.io.File
 
 class HomeActivity : AppCompatActivity() {
 
@@ -42,7 +45,6 @@ class HomeActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
-        // Initialize Views
         tvWelcome = findViewById(R.id.tvWelcome)
         btnLogout = findViewById(R.id.btnLogout)
         btnImportMusic = findViewById(R.id.btnImportMusic)
@@ -56,15 +58,13 @@ class HomeActivity : AppCompatActivity() {
         btnPlayPause = findViewById(R.id.btnPlayPause)
         btnNext = findViewById(R.id.btnNext)
 
-        // Setup Adapter
-        songAdapter = SongAdapter(this, songsList)
+        songAdapter = SongAdapter(this, songsList) { song ->
+            showDeleteConfirmation(song)
+        }
         lvMusicList.adapter = songAdapter
 
-        // Affiche l'email de l'utilisateur connecté
-        val currentUser = auth.currentUser
-        tvWelcome.text = "Welcome, ${currentUser?.email ?: "User"} !"
+        loadUserData()
 
-        // Logout Button
         btnLogout.setOnClickListener {
             musicPlayer.stop()
             auth.signOut()
@@ -72,12 +72,10 @@ class HomeActivity : AppCompatActivity() {
             finish()
         }
 
-        // Import Music Button
         btnImportMusic.setOnClickListener {
             startActivity(Intent(this, ImportMusicActivity::class.java))
         }
 
-        // Music Player Controls
         btnPlayPause.setOnClickListener {
             if (musicPlayer.isPlaying()) {
                 musicPlayer.pause()
@@ -113,7 +111,6 @@ class HomeActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
-        // Setup progress update listener
         musicPlayer.setOnProgressUpdateListener { currentTime, totalTime, isPlaying ->
             tvCurrentTime.text = formatTime(currentTime)
             tvTotalTime.text = formatTime(totalTime)
@@ -125,7 +122,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        // Click on song to play
         lvMusicList.setOnItemClickListener { _, _, position, _ ->
             val selectedSong = songsList[position]
             musicPlayer.setSongs(songsList)
@@ -133,8 +129,72 @@ class HomeActivity : AppCompatActivity() {
             updatePlayerUI()
         }
 
-        // Charger les musiques
         loadSongs()
+    }
+
+    private fun showDeleteConfirmation(song: Song) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete?")
+            .setMessage("Delete \"${song.name}\"?")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteSong(song)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteSong(song: Song) {
+        try {
+            val file = File(song.filePath)
+            if (file.exists()) {
+                file.delete()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        database.reference
+            .child("songs")
+            .child(song.id)
+            .removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(this, "Deleted!", Toast.LENGTH_SHORT).show()
+
+                if (musicPlayer.getCurrentSong()?.id == song.id) {
+                    musicPlayer.stop()
+                    tvCurrentSongName.text = "No song selected"
+                    btnPlayPause.text = "▶"
+                }
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun loadUserData() {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        database.reference
+            .child("users")
+            .child(currentUser.uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val username = snapshot.child("username").getValue(String::class.java)
+                    if (username != null) {
+                        tvWelcome.text = "Welcome, $username"
+                    } else {
+                        tvWelcome.text = "Welcome!"
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    tvWelcome.text = "Welcome!"
+                }
+            })
     }
 
     private fun loadSongs() {
@@ -144,7 +204,6 @@ class HomeActivity : AppCompatActivity() {
             return
         }
 
-        // Écouter les changements en temps réel
         database.reference
             .child("songs")
             .addValueEventListener(object : ValueEventListener {

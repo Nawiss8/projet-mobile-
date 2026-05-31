@@ -12,6 +12,10 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var etEmail: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var btnLogin: Button
+    private lateinit var tvRegisterLink: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,47 +23,49 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Si l'utilisateur est déjà connecté
+        etEmail = findViewById(R.id.etEmail)
+        etPassword = findViewById(R.id.etPassword)
+        btnLogin = findViewById(R.id.btnLogin)
+        tvRegisterLink = findViewById(R.id.tvRegisterLink)
+
+        btnLogin.setOnClickListener {
+            loginUser()
+        }
+
+        tvRegisterLink.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+            finish()
+        }
+
         if (auth.currentUser != null) {
             startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
+    }
 
-        try {
-            val etEmail = findViewById<EditText>(R.id.etEmail)
-            val etPassword = findViewById<EditText>(R.id.etPassword)
-            val btnLogin = findViewById<Button>(R.id.btnLogin)
-            val tvGoRegister = findViewById<TextView>(R.id.tvGoRegister)
+    private fun loginUser() {
+        val email = etEmail.text.toString().trim()
+        val password = etPassword.text.toString().trim()
 
-            btnLogin.setOnClickListener {
-                val email = etEmail.text.toString().trim()
-                val password = etPassword.text.toString().trim()
-
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-
-                // Connexion Firebase
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(this, "Welcome to Pulseo !", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this, HomeActivity::class.java))
-                            finish()
-                        } else {
-                            // Affiche l'erreur réelle
-                            val errorMsg = task.exception?.message ?: "Unknown error"
-                            Toast.makeText(this, "Login Failed: $errorMsg", Toast.LENGTH_LONG).show()
-                        }
-                    }
-            }
-
-            tvGoRegister.setOnClickListener {
-                startActivity(Intent(this, RegisterActivity::class.java))
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        btnLogin.isEnabled = false
+        btnLogin.text = "Signing in..."
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    btnLogin.isEnabled = true
+                    btnLogin.text = "Sign In"
+                }
+            }
     }
 }
