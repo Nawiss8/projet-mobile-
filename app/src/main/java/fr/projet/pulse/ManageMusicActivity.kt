@@ -52,8 +52,17 @@ class ManageMusicActivity : AppCompatActivity() {
     }
 
     private fun loadSongs() {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // FILTRE PAR USERID !
         database.reference
             .child("songs")
+            .orderByChild("userId")
+            .equalTo(currentUser.uid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     songsList.clear()

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0A0A0A">
+    android:background="@color/colorBackground">
 
     <!-- Header -->
     <LinearLayout
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="#1A1A1A"
+        android:background="@color/colorSurfacePrimary"
         android:padding="16dp">
 
         <TextView
@@ -21,31 +21,39 @@
             android:text="🎵 Pulseo"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="Logout"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:background="#FF006E"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp" />
+            android:textColor="@color/colorText" />
     </LinearLayout>
 
-    <!-- Welcome -->
-    <TextView
-        android:id="@+id/tvWelcome"
+    <!-- Welcome + Theme Button -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome !"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="16dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvWelcome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Welcome !"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorText" />
+
+        <Button
+            android:id="@+id/btnTheme"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="🌙"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:padding="0dp" />
+    </LinearLayout>
 
     <!-- Buttons Row -->
     <LinearLayout
@@ -64,7 +72,7 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:background="#FF006E"
+            android:background="@color/colorAccent"
             android:layout_marginEnd="8dp" />
 
         <Button
@@ -76,7 +84,7 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:background="#00D4FF"
+            android:background="@color/colorAccentAlt"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
@@ -87,7 +95,7 @@
         android:text="Now Playing"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/colorText"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="12dp" />
@@ -98,7 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#0A0A0A"
+        android:background="@color/colorBackground"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:dividerHeight="12dp"
@@ -110,7 +118,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#1A1A1A"
+        android:background="@color/colorSurfacePrimary"
         android:padding="16dp">
 
         <!-- Current Song -->
@@ -121,7 +129,7 @@
             android:text="No song selected"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorText"
             android:ellipsize="end"
             android:maxLines="1"
             android:layout_marginBottom="12dp" />
@@ -140,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:text="0:00"
                 android:textSize="12sp"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/colorTextSecondary"
                 android:layout_marginEnd="8dp" />
 
             <SeekBar
@@ -158,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:text="0:00"
                 android:textSize="12sp"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/colorTextSecondary"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
 
@@ -176,7 +184,7 @@
                 android:text="⏮"
                 android:textSize="18sp"
                 android:textColor="#FFFFFF"
-                android:background="#FF006E"
+                android:background="@color/colorAccent"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp" />
 
@@ -187,7 +195,7 @@
                 android:text="▶"
                 android:textSize="24sp"
                 android:textColor="#FFFFFF"
-                android:background="#FF006E"
+                android:background="@color/colorAccent"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp" />
 
@@ -198,9 +206,21 @@
                 android:text="⏭"
                 android:textSize="18sp"
                 android:textColor="#FFFFFF"
-                android:background="#FF006E"
+                android:background="@color/colorAccent"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp" />
         </LinearLayout>
+
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="🚪 Logout"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:background="@color/colorDelete"
+            android:layout_marginTop="16dp" />
     </LinearLayout>
 </LinearLayout>

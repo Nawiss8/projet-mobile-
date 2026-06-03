@@ -64,9 +64,7 @@ class ImportMusicActivity : AppCompatActivity() {
         }
 
         btnImport.setOnClickListener {
-            if (validateAndImport()) {
-                // Ne pas finir immédiatement, attendre la sauvegarde async
-            }
+            validateAndImport()
         }
 
         btnBack.setOnClickListener {
@@ -184,22 +182,22 @@ class ImportMusicActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateAndImport(): Boolean {
+    private fun validateAndImport() {
         val songName = etSongName.text.toString().trim()
 
         if (selectedFileUri == null) {
             Toast.makeText(this, "Please select a file", Toast.LENGTH_SHORT).show()
-            return false
+            return
         }
 
         if (songName.isEmpty()) {
             Toast.makeText(this, "Please enter a song name", Toast.LENGTH_SHORT).show()
-            return false
+            return
         }
 
         if (durationSeconds > MAX_DURATION_SECONDS) {
             Toast.makeText(this, "File is too long!", Toast.LENGTH_SHORT).show()
-            return false
+            return
         }
 
         // Désactiver le bouton pour éviter les doubles clics
@@ -210,8 +208,6 @@ class ImportMusicActivity : AppCompatActivity() {
         Thread {
             saveSongToDatabase(songName)
         }.start()
-
-        return false
     }
 
     private fun saveSongToDatabase(songName: String) {
@@ -245,9 +241,9 @@ class ImportMusicActivity : AppCompatActivity() {
                 id = songId,
                 userId = currentUser.uid,
                 name = songName,
-                duration = durationSeconds,
+                duration = durationSeconds.toInt(),
                 filePath = audioFile.absolutePath,
-                dateImported = System.currentTimeMillis()
+                dateAdded = System.currentTimeMillis()
             )
 
             // 3. Sauvegarder dans Realtime Database

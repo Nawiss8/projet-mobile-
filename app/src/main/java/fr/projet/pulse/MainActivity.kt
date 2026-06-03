@@ -19,9 +19,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         auth = FirebaseAuth.getInstance()
+
+        // Si l'utilisateur est déjà connecté, on redirige direct et on stoppe le onCreate ici
+        if (auth.currentUser != null) {
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+            return
+        }
+
+        setContentView(R.layout.activity_main)
 
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
@@ -34,11 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         tvRegisterLink.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
-            finish()
-        }
-
-        if (auth.currentUser != null) {
-            startActivity(Intent(this, HomeActivity::class.java))
             finish()
         }
     }
@@ -56,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         btnLogin.text = "Signing in..."
 
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
+            .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, HomeActivity::class.java))

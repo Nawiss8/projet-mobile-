@@ -2,13 +2,13 @@ package com.pulseo
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ListView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,9 +22,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var btnLogout: Button
     private lateinit var btnImportMusic: Button
     private lateinit var btnManageMusic: Button
+    private lateinit var btnTheme: Button
     private lateinit var tvWelcome: TextView
     private lateinit var lvMusicList: ListView
-
     private lateinit var tvCurrentSongName: TextView
     private lateinit var tvCurrentTime: TextView
     private lateinit var tvTotalTime: TextView
@@ -44,12 +44,19 @@ class HomeActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
+        initUI()
+        setupClickListeners()
+        loadUserData()
+        loadSongs()
+    }
+
+    private fun initUI() {
         tvWelcome = findViewById(R.id.tvWelcome)
         btnLogout = findViewById(R.id.btnLogout)
         btnImportMusic = findViewById(R.id.btnImportMusic)
         btnManageMusic = findViewById(R.id.btnManageMusic)
+        btnTheme = findViewById(R.id.btnTheme)
         lvMusicList = findViewById(R.id.lvMusicList)
-
         tvCurrentSongName = findViewById(R.id.tvCurrentSongName)
         tvCurrentTime = findViewById(R.id.tvCurrentTime)
         tvTotalTime = findViewById(R.id.tvTotalTime)
@@ -60,9 +67,9 @@ class HomeActivity : AppCompatActivity() {
 
         songAdapter = SongAdapter(this, songsList)
         lvMusicList.adapter = songAdapter
+    }
 
-        loadUserData()
-
+    private fun setupClickListeners() {
         btnLogout.setOnClickListener {
             musicPlayer.stop()
             auth.signOut()
@@ -78,6 +85,11 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, ManageMusicActivity::class.java))
         }
 
+        btnTheme.setOnClickListener {
+            ThemeHelper.toggleTheme(this)
+            Toast.makeText(this, "Thème changé au redémarrage", Toast.LENGTH_SHORT).show()
+        }
+
         btnPlayPause.setOnClickListener {
             if (musicPlayer.isPlaying()) {
                 musicPlayer.pause()
@@ -87,130 +99,100 @@ class HomeActivity : AppCompatActivity() {
                     musicPlayer.resume()
                     btnPlayPause.text = "⏸"
                 } else {
-                    Toast.makeText(this, "No song selected", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Sélectionne une chanson", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         btnNext.setOnClickListener {
             musicPlayer.next()
-            updatePlayerUI()
+            updateUI()
         }
 
         btnPrevious.setOnClickListener {
             musicPlayer.previous()
-            updatePlayerUI()
+            updateUI()
         }
 
         pbProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    musicPlayer.seekTo(progress.toLong())
-                }
+                if (fromUser) musicPlayer.seekTo(progress.toLong())
             }
-
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
         musicPlayer.setOnProgressUpdateListener { currentTime, totalTime, isPlaying ->
-            tvCurrentTime.text = formatTime(currentTime)
-            tvTotalTime.text = formatTime(totalTime)
-            pbProgress.max = totalTime.toInt()
-            pbProgress.progress = currentTime.toInt()
-
-            if (isPlaying) {
-                btnPlayPause.text = "⏸"
-            }
+            updateProgress(currentTime, totalTime, isPlaying)
         }
 
         lvMusicList.setOnItemClickListener { _, _, position, _ ->
-            val selectedSong = songsList[position]
-            musicPlayer.setSongs(songsList)
-            musicPlayer.playAtIndex(position)
-            updatePlayerUI()
-            Toast.makeText(this, "Playing: ${selectedSong.name}", Toast.LENGTH_SHORT).show()
+            if (position < songsList.size) {
+                val song = songsList[position]
+                musicPlayer.setSongs(songsList)
+                musicPlayer.playAtIndex(position)
+                updateUI()
+                Toast.makeText(this, "🎵 ${song.name}", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
 
-        loadSongs()
+    private fun updateProgress(currentTime: Long, totalTime: Long, isPlaying: Boolean) {
+        tvCurrentTime.text = formatTime(currentTime)
+        tvTotalTime.text = formatTime(totalTime)
+        pbProgress.max = totalTime.toInt()
+        pbProgress.progress = currentTime.toInt()
+        if (isPlaying) btnPlayPause.text = "⏸"
+    }
+
+    private fun updateUI() {
+        val song = musicPlayer.getCurrentSong()
+        if (song != null) {
+            tvCurrentSongName.text = "▶️ ${song.name}"
+            btnPlayPause.text = "⏸"
+        }
     }
 
     private fun loadUserData() {
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        database.reference
-            .child("users")
-            .child(currentUser.uid)
+        val user = auth.currentUser ?: return
+        database.reference.child("users").child(user.uid)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val username = snapshot.child("username").getValue(String::class.java)
-                    if (username != null) {
-                        tvWelcome.text = "Welcome, $username"
-                    } else {
-                        tvWelcome.text = "Welcome!"
-                    }
+                    tvWelcome.text = if (username != null) "🎵 Bienvenue $username" else "🎵 Pulseo"
                 }
-
                 override fun onCancelled(error: DatabaseError) {
-                    tvWelcome.text = "Welcome!"
+                    tvWelcome.text = "🎵 Pulseo"
                 }
             })
     }
 
     private fun loadSongs() {
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        database.reference
-            .child("songs")
+        val user = auth.currentUser ?: return
+        database.reference.child("songs").orderByChild("userId").equalTo(user.uid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     songsList.clear()
-
-                    for (songSnapshot in snapshot.children) {
-                        val song = songSnapshot.getValue(Song::class.java)
+                    for (snap in snapshot.children) {
+                        val song = snap.getValue(Song::class.java)
                         if (song != null) {
-                            songsList.add(song)
+                            songsList.add(song.copy(id = snap.key ?: ""))
                         }
                     }
-
                     musicPlayer.setSongs(songsList)
                     songAdapter.notifyDataSetChanged()
-
-                    if (songsList.isEmpty()) {
-                        tvCurrentSongName.text = "No songs imported"
-                    }
+                    if (songsList.isEmpty()) tvCurrentSongName.text = "📂 Importe une chanson"
                 }
-
                 override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(
-                        this@HomeActivity,
-                        "Error loading songs: ${error.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@HomeActivity, "Erreur: ${error.message}", Toast.LENGTH_SHORT).show()
                 }
             })
     }
 
-    private fun updatePlayerUI() {
-        val currentSong = musicPlayer.getCurrentSong()
-        if (currentSong != null) {
-            tvCurrentSongName.text = currentSong.name
-            btnPlayPause.text = "⏸"
-        }
-    }
-
-    private fun formatTime(milliseconds: Long): String {
-        val seconds = (milliseconds / 1000) % 60
-        val minutes = (milliseconds / 1000) / 60
-        return String.format("%d:%02d", minutes, seconds)
+    private fun formatTime(ms: Long): String {
+        val sec = (ms / 1000) % 60
+        val min = (ms / 1000) / 60
+        return String.format("%d:%02d", min, sec)
     }
 
     override fun onDestroy() {

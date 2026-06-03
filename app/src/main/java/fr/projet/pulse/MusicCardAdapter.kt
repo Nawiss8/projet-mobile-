@@ -46,7 +46,7 @@ class MusicCardAdapter(
 
             // Date Added
             val dateFormat = SimpleDateFormat("MMM d, yyyy • HH:mm", Locale.getDefault())
-            tvDateAdded.text = dateFormat.format(Date(song.dateImported))
+            tvDateAdded.text = dateFormat.format(Date(song.dateAdded))
 
             // Card color
             val color = Color.parseColor(colors[colorIndex % colors.size])

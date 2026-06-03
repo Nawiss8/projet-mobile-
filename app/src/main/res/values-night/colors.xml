@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- MODE CLAIR - Colors for light theme -->
-    <color name="colorBackground">#FFFFFF</color>
-    <color name="colorSurfacePrimary">#F5F5F5</color>
-    <color name="colorText">#000000</color>
-    <color name="colorTextSecondary">#666666</color>
+    <!-- MODE SOMBRE - Colors for dark theme -->
+    <color name="colorBackground">#0A0A0A</color>
+    <color name="colorSurfacePrimary">#1A1A1A</color>
+    <color name="colorText">#FFFFFF</color>
+    <color name="colorTextSecondary">#AAAAAA</color>
     <color name="colorAccent">#FF006E</color>
     <color name="colorAccentAlt">#00D4FF</color>
     <color name="colorDelete">#FF3333</color>
