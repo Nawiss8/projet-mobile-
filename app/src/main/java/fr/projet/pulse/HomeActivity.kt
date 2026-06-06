@@ -2,7 +2,6 @@ package com.pulseo
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ListView
 import android.widget.SeekBar
@@ -36,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
     private val songsList = mutableListOf<Song>()
     private lateinit var songAdapter: SongAdapter
     private val musicPlayer = MusicPlayer()
+    private var songsLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +46,11 @@ class HomeActivity : AppCompatActivity() {
 
         initUI()
         setupClickListeners()
-        loadUserData()
-        loadSongs()
+
+        tvWelcome.text = "🎵 Pulseo"
+        tvCurrentSongName.text = "📂 Chargement..."
+
+        loadSongsOnce()
     }
 
     private fun initUI() {
@@ -98,8 +101,6 @@ class HomeActivity : AppCompatActivity() {
                 if (musicPlayer.getCurrentSong() != null) {
                     musicPlayer.resume()
                     btnPlayPause.text = "⏸"
-                } else {
-                    Toast.makeText(this, "Sélectionne une chanson", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -116,14 +117,25 @@ class HomeActivity : AppCompatActivity() {
 
         pbProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) musicPlayer.seekTo(progress.toLong())
+                if (fromUser) {
+                    musicPlayer.seekTo(progress.toLong())
+                }
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
         musicPlayer.setOnProgressUpdateListener { currentTime, totalTime, isPlaying ->
-            updateProgress(currentTime, totalTime, isPlaying)
+            runOnUiThread {
+                tvCurrentTime.text = formatTime(currentTime)
+                tvTotalTime.text = formatTime(totalTime)
+                pbProgress.max = totalTime.toInt()
+                pbProgress.progress = currentTime.toInt()
+                if (isPlaying) {
+                    btnPlayPause.text = "⏸"
+                }
+            }
         }
 
         lvMusicList.setOnItemClickListener { _, _, position, _ ->
@@ -137,12 +149,42 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateProgress(currentTime: Long, totalTime: Long, isPlaying: Boolean) {
-        tvCurrentTime.text = formatTime(currentTime)
-        tvTotalTime.text = formatTime(totalTime)
-        pbProgress.max = totalTime.toInt()
-        pbProgress.progress = currentTime.toInt()
-        if (isPlaying) btnPlayPause.text = "⏸"
+    private fun loadSongsOnce() {
+        val user = auth.currentUser
+        if (user == null || songsLoaded) {
+            return
+        }
+
+        songsLoaded = true
+
+        database.reference
+            .child("songs")
+            .orderByChild("userId")
+            .equalTo(user.uid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    songsList.clear()
+                    for (snap in snapshot.children) {
+                        val song = snap.getValue(Song::class.java)
+                        if (song != null) {
+                            song.id = snap.key ?: ""
+                            songsList.add(song)
+                        }
+                    }
+                    musicPlayer.setSongs(songsList)
+                    songAdapter.notifyDataSetChanged()
+
+                    if (songsList.isEmpty()) {
+                        tvCurrentSongName.text = "📂 Importe une chanson"
+                    } else {
+                        tvCurrentSongName.text = "📂 ${songsList.size} chansons"
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    tvCurrentSongName.text = "❌ Erreur chargement"
+                }
+            })
     }
 
     private fun updateUI() {
@@ -153,46 +195,16 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadUserData() {
-        val user = auth.currentUser ?: return
-        database.reference.child("users").child(user.uid)
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val username = snapshot.child("username").getValue(String::class.java)
-                    tvWelcome.text = if (username != null) "🎵 Bienvenue $username" else "🎵 Pulseo"
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    tvWelcome.text = "🎵 Pulseo"
-                }
-            })
-    }
-
-    private fun loadSongs() {
-        val user = auth.currentUser ?: return
-        database.reference.child("songs").orderByChild("userId").equalTo(user.uid)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    songsList.clear()
-                    for (snap in snapshot.children) {
-                        val song = snap.getValue(Song::class.java)
-                        if (song != null) {
-                            songsList.add(song.copy(id = snap.key ?: ""))
-                        }
-                    }
-                    musicPlayer.setSongs(songsList)
-                    songAdapter.notifyDataSetChanged()
-                    if (songsList.isEmpty()) tvCurrentSongName.text = "📂 Importe une chanson"
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    Toast.makeText(this@HomeActivity, "Erreur: ${error.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
-    }
-
     private fun formatTime(ms: Long): String {
         val sec = (ms / 1000) % 60
         val min = (ms / 1000) / 60
         return String.format("%d:%02d", min, sec)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        songsLoaded = false
+        loadSongsOnce()
     }
 
     override fun onDestroy() {
